@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
 const birthDate = new Date(2003, 1, 24)
@@ -45,6 +45,8 @@ function App() {
   const [showSurprise, setShowSurprise] = useState(false)
   const [candlesLit, setCandlesLit] = useState(false)
   const [musicOn, setMusicOn] = useState(true)
+  const [needsMusicTap, setNeedsMusicTap] = useState(false)
+  const audioRef = useRef(null)
 
   const nextBirthday = useMemo(() => getNextBirthday(now), [now])
   const countdown = getCountdownParts(nextBirthday, now)
@@ -60,6 +62,51 @@ function App() {
 
     return () => clearInterval(intervalId)
   }, [])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) {
+      return
+    }
+
+    audio.volume = 0.7
+
+    if (musicOn) {
+      const playPromise = audio.play()
+      if (playPromise?.then) {
+        playPromise
+          .then(() => setNeedsMusicTap(false))
+          .catch(() => setNeedsMusicTap(true))
+      }
+    } else {
+      audio.pause()
+    }
+  }, [musicOn])
+
+  useEffect(() => {
+    if (!musicOn || !needsMusicTap) {
+      return
+    }
+
+    const resumeAudio = () => {
+      const audio = audioRef.current
+      if (!audio) {
+        return
+      }
+
+      audio.play().then(() => {
+        setNeedsMusicTap(false)
+      }).catch(() => {})
+    }
+
+    window.addEventListener('pointerdown', resumeAudio, { once: true })
+    window.addEventListener('keydown', resumeAudio, { once: true })
+
+    return () => {
+      window.removeEventListener('pointerdown', resumeAudio)
+      window.removeEventListener('keydown', resumeAudio)
+    }
+  }, [musicOn, needsMusicTap])
 
   return (
     <main className="birthday-theme">
@@ -164,7 +211,7 @@ function App() {
             </button>
           </article>
 
-          <footer className="footer-note">Made with ❤️ just for you</footer>
+          <footer className="footer-note">Made by a mad man, just for you ❤️</footer>
         </section>
 
         <button
@@ -176,11 +223,11 @@ function App() {
           {musicOn ? '🎵' : '🎶'}
         </button>
 
-        {musicOn && (
-          <>
-            <audio src={`${assetBase}music.mp3`} autoPlay loop />
-          </>
+        {musicOn && needsMusicTap && (
+          <p className="music-note">Tap once to start music</p>
         )}
+
+        <audio ref={audioRef} src={`${assetBase}music.mp3`} loop preload="auto" />
       </section>
     </main>
   )
