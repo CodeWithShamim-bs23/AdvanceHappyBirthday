@@ -239,7 +239,7 @@ function App() {
           <p className="music-note">Tap once to start music</p>
         )}
 
-        <audio ref={audioRef} src={`${assetBase}music.mp3`} loop preload="auto" />
+        <audio ref={audioRef} src={`${assetBase}hbd.mp3`} loop preload="auto" />
       </section>
     </main>
   )
