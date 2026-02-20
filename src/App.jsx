@@ -5,13 +5,57 @@ const birthDate = new Date(2003, 1, 24) // February 24, 2003
 const specialName = 'Mayesha'
 const assetBase = import.meta.env.BASE_URL
 
-const galleryItems = [
-  { title: 'Sweet Smile', image: `${assetBase}img1.jpg`, className: 'large' },
-  { title: 'Celebration', image: `${assetBase}img2.jpg`, className: 'small' },
-  { title: 'Happy Day', image: `${assetBase}img3.jpg`, className: 'small' },
-  { title: 'Best Moments', image: `${assetBase}img4.jpg`, className: 'wide' },
-  { title: 'Together', image: `${assetBase}img5.jpg`, className: 'small' },
-  { title: 'Golden Lights', image: `${assetBase}img6.jpg`, className: 'small' },
+const galleryClassPattern = ['large', 'small', 'small', 'wide', 'small', 'small']
+const galleryImagePool = Array.from(
+  { length: 18 },
+  (_, index) => `${assetBase}img${index + 1}.jpg`
+)
+
+function createSeededRandom(seedString) {
+  let hash = 2166136261
+  for (let index = 0; index < seedString.length; index += 1) {
+    hash ^= seedString.charCodeAt(index)
+    hash = Math.imul(hash, 16777619)
+  }
+
+  let seed = hash >>> 0
+
+  return () => {
+    seed = (seed + 0x6D2B79F5) >>> 0
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+    t ^= t + Math.imul(t ^ (t >>> 7), 61 | t)
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function getHourlyRandomGalleryItems(referenceDate) {
+  const hourSeed = `${referenceDate.getFullYear()}-${referenceDate.getMonth()}-${referenceDate.getDate()}-${referenceDate.getHours()}`
+  const random = createSeededRandom(hourSeed)
+  const images = [...galleryImagePool]
+
+  for (let index = images.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(random() * (index + 1))
+    const temp = images[index]
+    images[index] = images[randomIndex]
+    images[randomIndex] = temp
+  }
+
+  return images.slice(0, galleryClassPattern.length).map((image, index) => ({
+    title: `Memory ${index + 1}`,
+    image,
+    className: galleryClassPattern[index],
+  }))
+}
+
+const wishMessages = [
+  '💖 May your smile shine brighter than the candles today. Wishing you endless joy!',
+  '✨ May this birthday bring you moments that make your heart feel full.',
+  '🌸 May every new morning bring you peace, happiness, and sweet surprises.',
+  '🎉 Keep shining, keep dreaming, and keep being wonderfully you.',
+  '🌟 May your path be filled with love, laughter, and beautiful memories.',
+  '💫 Wishing you strength, success, and smiles in every step ahead.',
+  '🕊️ May your heart stay light and your days stay bright all year long.',
+  '🎂 You deserve all the happiness in the world today and always.',
 ]
 
 function isSameMonthDay(leftDate, rightDate) {
@@ -61,6 +105,17 @@ function App() {
   const todaysMonth = now.getMonth()
   const isBirthdayToday =
     todaysMonth === birthDate.getMonth() && todaysDayOfMonth === birthDate.getDate()
+  const dayNumber = Math.floor(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / (1000 * 60 * 60 * 24)
+  )
+  const cycleDayIndex = ((dayNumber % 4) + 4) % 4
+  const todayWishes = wishMessages.slice(cycleDayIndex * 2, cycleDayIndex * 2 + 2)
+  const galleryItems = useMemo(() => getHourlyRandomGalleryItems(now), [
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    now.getHours(),
+  ])
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -188,17 +243,11 @@ function App() {
         <section className="content-panel">
           <h2 className="section-title">A Special Message</h2>
           <div className="message-grid">
-            <article className="message-card">
-              <p>
-                💖 May your smile shine brighter than the candles today. Wishing you
-                endless joy!
-              </p>
-            </article>
-            <article className="message-card">
-              <p>
-                ✨ May this birthday bring you moments that make your heart feel full.
-              </p>
-            </article>
+            {todayWishes.map((wish) => (
+              <article key={wish} className="message-card">
+                <p>{wish}</p>
+              </article>
+            ))}
           </div>
 
           <h2 className="section-title">Photo Gallery</h2>
