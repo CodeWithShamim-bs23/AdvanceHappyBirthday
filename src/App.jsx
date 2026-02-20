@@ -138,7 +138,7 @@ function App() {
               <p>
                 {isBirthdayToday
                   ? 'Surprise is ready now for you 🎉🎁'
-                  : 'Just wait until your birthday — a massive surprise is coming for you.🎉🎂'}
+                  : 'Just wait until your birthday —  surprise is coming for you.🎉🎂'}
               </p>
               {isBirthdayToday && (
                 <button
