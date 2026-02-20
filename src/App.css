@@ -154,6 +154,13 @@
   line-height: 1.4;
 }
 
+.countdown-title {
+  margin: 1rem 0 0.5rem;
+  color: #78296f;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(122, 41, 111, 0.35);
+}
+
 .counter-strip {
   margin: 1rem auto 0;
   width: min(520px, 100%);

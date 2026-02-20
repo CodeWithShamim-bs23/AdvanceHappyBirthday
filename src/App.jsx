@@ -43,13 +43,13 @@ function App() {
   const [now, setNow] = useState(new Date())
   const [showSurprise, setShowSurprise] = useState(false)
   const [candlesLit, setCandlesLit] = useState(false)
-  const [musicOn, setMusicOn] = useState(false)
+  const [musicOn, setMusicOn] = useState(true)
 
   const nextBirthday = useMemo(() => getNextBirthday(now), [now])
   const countdown = getCountdownParts(nextBirthday, now)
   const todaysDayOfMonth = now.getDate()
   const todaysMonth = now.getMonth()
-  const isBirthdayToday = true || 
+  const isBirthdayToday =
     todaysMonth === birthDate.getMonth() && todaysDayOfMonth === birthDate.getDate()
 
   useEffect(() => {
@@ -104,6 +104,7 @@ function App() {
             </div>
           )}
 
+          <p className="countdown-title">Countdown to your special day ✨</p>
           <div className="counter-strip">
             <article>
               <strong>{formatCounter(countdown.days)}</strong>
@@ -175,7 +176,9 @@ function App() {
         </button>
 
         {musicOn && (
-          <p className="music-note">Music mode on ♫ (add your favorite song later)</p>
+          <>
+            <audio src="/music.mp3" autoPlay loop />
+          </>
         )}
       </section>
     </main>
