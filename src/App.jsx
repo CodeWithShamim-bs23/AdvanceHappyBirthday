@@ -3,14 +3,15 @@ import './App.css'
 
 const birthDate = new Date(2003, 1, 24)
 const specialName = 'Mayesha'
+const assetBase = import.meta.env.BASE_URL
 
 const galleryItems = [
-  { title: 'Sweet Smile', image: '/img1.jpg', className: 'large' },
-  { title: 'Celebration', image: '/img2.jpg', className: 'small' },
-  { title: 'Happy Day', image: '/img3.jpg', className: 'small' },
-  { title: 'Best Moments', image: '/img4.jpg', className: 'wide' },
-  { title: 'Together', image: '/img5.jpg', className: 'small' },
-  { title: 'Golden Lights', image: '/img6.jpg', className: 'small' },
+  { title: 'Sweet Smile', image: `${assetBase}img1.jpg`, className: 'large' },
+  { title: 'Celebration', image: `${assetBase}img2.jpg`, className: 'small' },
+  { title: 'Happy Day', image: `${assetBase}img3.jpg`, className: 'small' },
+  { title: 'Best Moments', image: `${assetBase}img4.jpg`, className: 'wide' },
+  { title: 'Together', image: `${assetBase}img5.jpg`, className: 'small' },
+  { title: 'Golden Lights', image: `${assetBase}img6.jpg`, className: 'small' },
 ]
 
 function getNextBirthday(referenceDate) {
@@ -177,7 +178,7 @@ function App() {
 
         {musicOn && (
           <>
-            <audio src="/music.mp3" autoPlay loop />
+            <audio src={`${assetBase}music.mp3`} autoPlay loop />
           </>
         )}
       </section>
