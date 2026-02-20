@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
-const birthDate = new Date(2003, 1, 20)
+const birthDate = new Date(2003, 1, 24) // February 24, 2003
 const specialName = 'Mayesha'
 const assetBase = import.meta.env.BASE_URL
 
