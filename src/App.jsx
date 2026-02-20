@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 
-const birthDate = new Date(2003, 1, 24)
+const birthDate = new Date(2003, 1, 20)
 const specialName = 'Mayesha'
 const assetBase = import.meta.env.BASE_URL
 
@@ -151,7 +151,9 @@ function App() {
                 <button
                   type="button"
                   className="surprise-button"
-                  onClick={() => window.open('https://codewithshamim-bs23.github.io/HappyBirthday/', '_blank', 'noopener,noreferrer')}
+                  onClick={() => {
+                    window.location.href = 'https://codewithshamim-bs23.github.io/HappyBirthday/'
+                  }}
                 >
                   Click here
                 </button>
