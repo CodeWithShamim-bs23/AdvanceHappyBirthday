@@ -14,12 +14,19 @@ const galleryItems = [
   { title: 'Golden Lights', image: `${assetBase}img6.jpg`, className: 'small' },
 ]
 
+function isSameMonthDay(leftDate, rightDate) {
+  return (
+    leftDate.getMonth() === rightDate.getMonth() &&
+    leftDate.getDate() === rightDate.getDate()
+  )
+}
+
 function getNextBirthday(referenceDate) {
   const now = referenceDate
   const year = now.getFullYear()
   const next = new Date(year, birthDate.getMonth(), birthDate.getDate())
 
-  if (next < now) {
+  if (next < now && !isSameMonthDay(now, birthDate)) {
     next.setFullYear(year + 1)
   }
 
@@ -171,6 +178,9 @@ function App() {
               <span>Sec</span>
             </article>
           </div>
+          {isBirthdayToday && (
+            <p className="countdown-title">Surprise is ready for you. Click Open Surprise 🎉🎁</p>
+          )}
         </header>
 
         <section className="content-panel">
